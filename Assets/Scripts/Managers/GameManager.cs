@@ -8,7 +8,8 @@ public enum GamePhase
     GAME,
     PRE_END,
     END,
-    SKINSELECTION
+    SKINSELECTION,
+    DAILYREWARD
 }
 
 public class GameManager : SingletonMB<GameManager>
