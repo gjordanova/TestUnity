@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Features
   m_EditorClassIdentifier: 
   PlayerCollision: 0
-  SkinSelectionScreen: 0
+  SkinSelectionScreen: 1
   DailyRewards: 0
   CustomFeature: 0
   DebugMenu: 0

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class SkinSelectorGrid : MonoBehaviour
+public class SkinSelectorGrid : View<SkinSelectorGrid>
 {
     [Header("Prefab Settings")]
     public GameObject skinItemPrefab;          // Prefab of the grid item
@@ -10,6 +10,7 @@ public class SkinSelectorGrid : MonoBehaviour
     public Transform topPreviewParent;         // Where the big brush is shown (Top Preview area)
     public List<GameObject> brushPrefabs;       // Two brush prefabs (Brush + Roller)
     public List<ColorData> brushColorsData;     // 6 colors from scriptable objects
+    public Button backButton;          // Prefab of the grid item
 
     [Header("Feature Control")]
     public FeatureData featureData;
@@ -27,7 +28,36 @@ public class SkinSelectorGrid : MonoBehaviour
         PopulateGrid();
         AutoSelectFirstBrush();
     }
+    protected override void Awake()
+    {
+        base.Awake();
 
+        if (backButton != null)
+            backButton.onClick.AddListener(OnBackButtonPressed);
+    }
+    protected override void OnGamePhaseChanged(GamePhase _GamePhase)
+    {
+        switch (_GamePhase)
+        {
+            case GamePhase.SKINSELECTION:
+                Transition(true);
+                break;
+        }
+        
+    }
+    public void OnBackButtonPressed()
+    {
+        Transition(false); // Fade out the SkinSelectorGrid
+        ClearGrid();
+        GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU); // Return to MainMenu
+    }
+    private void ClearGrid()
+    {
+        foreach (Transform child in m_GridParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
     private void PopulateGrid()
     {
         if (brushPrefabs.Count < 2 || brushColorsData.Count < 6)

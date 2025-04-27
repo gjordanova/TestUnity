@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class MainMenuView : View<MainMenuView>
 {
     private const string m_BestScorePrefix = "BEST SCORE ";
-
+    [Header("Ranks")]
+    public string[] m_Ratings;
     public Text m_BestScoreText;
     public Image m_BestScoreBar;
     public GameObject m_BestScoreObject;
@@ -20,8 +21,13 @@ public class MainMenuView : View<MainMenuView>
     public GameObject m_PointsPerRank;
     public RankingView m_RankingView;
 
-    [Header("Ranks")]
-    public string[] m_Ratings;
+    [Header("Brush Selection UI")]
+    public Button m_BrushButton;         // Only the button!
+    public GameObject m_SkinSelectionScreen; // The grid screen
+    public GameObject m_BrushSelect; // The grid screen
+
+    [Header("Feature Control")]
+    public FeatureData m_FeatureData;    // ScriptableObject
 
     private StatsManager m_StatsManager;
 
@@ -31,6 +37,43 @@ public class MainMenuView : View<MainMenuView>
 
         m_StatsManager = StatsManager.Instance;
         m_IdSkin = m_StatsManager.FavoriteSkin;
+
+        if (m_FeatureData != null)
+        {
+            bool skinSelectionEnabled = m_FeatureData.SkinSelectionScreen;
+
+            if (m_BrushButton != null)
+                m_BrushButton.gameObject.SetActive(skinSelectionEnabled);
+
+            if (m_BrushSelect != null)
+                m_BrushSelect.SetActive(!skinSelectionEnabled);
+        }
+    }
+
+    private void Start()
+    {
+        if (m_BrushButton != null)
+            m_BrushButton.onClick.AddListener(OnBrushButtonClicked);
+
+        if (m_SkinSelectionScreen != null)
+            m_SkinSelectionScreen.SetActive(false);
+
+        if (m_FeatureData != null)
+        {
+            bool skinSelectionEnabled = m_FeatureData.SkinSelectionScreen;
+            if (m_BrushButton != null)
+                m_BrushButton.gameObject.SetActive(skinSelectionEnabled);
+        }
+    }
+    public void OnBrushButtonPressed()
+    {
+        Transition(false); // Hide MainMenuView
+        GameManager.Instance.ChangePhase(GamePhase.SKINSELECTION);
+    }
+    private void OnBrushButtonClicked()
+    {
+        if (m_SkinSelectionScreen != null)
+            m_SkinSelectionScreen.SetActive(true);
     }
 
     public void OnPlayButton()
@@ -52,9 +95,7 @@ public class MainMenuView : View<MainMenuView>
 
             case GamePhase.LOADING:
                 m_BrushGroundLight.SetActive(false);
-
-                    m_BrushesPrefab.SetActive(false);
-
+                m_BrushesPrefab.SetActive(false);
                 if (m_Visible)
                     Transition(false);
                 break;
@@ -63,20 +104,23 @@ public class MainMenuView : View<MainMenuView>
 
     public void SetTitleColor(Color _Color)
     {
-        m_BrushesPrefab.SetActive(true);
-        int favoriteSkin = Mathf.Min(m_StatsManager.FavoriteSkin, m_GameManager.m_Skins.Count - 1);
-        m_BrushesPrefab.GetComponent<BrushMainMenu>().Set(m_GameManager.m_Skins[favoriteSkin]);
-        string playerName = m_StatsManager.GetNickname();
+        if (m_BrushesPrefab != null)
+        {
+            m_BrushesPrefab.SetActive(true);
+            int favoriteSkin = Mathf.Min(m_StatsManager.FavoriteSkin, m_GameManager.m_Skins.Count - 1);
+            m_BrushesPrefab.GetComponent<BrushMainMenu>().Set(m_GameManager.m_Skins[favoriteSkin]);
+        }
 
-        if (playerName != null)
+        string playerName = m_StatsManager.GetNickname();
+        if (!string.IsNullOrEmpty(playerName))
             m_InputField.text = playerName;
 
-        for (int i = 0; i < m_ColoredImages.Count; ++i)
-            m_ColoredImages[i].color = _Color;
+        foreach (var img in m_ColoredImages)
+            img.color = _Color;
 
-        for (int i = 0; i < m_ColoredTexts.Count; i++)
-            m_ColoredTexts[i].color = _Color;
-            
+        foreach (var txt in m_ColoredTexts)
+            txt.color = _Color;
+
         m_RankingView.gameObject.SetActive(true);
         m_RankingView.RefreshNormal();
     }
@@ -110,12 +154,19 @@ public class MainMenuView : View<MainMenuView>
     {
         _NewBrush = Mathf.Clamp(_NewBrush, 0, GameManager.Instance.m_Skins.Count);
         m_IdSkin = _NewBrush;
+
         if (m_IdSkin >= GameManager.Instance.m_Skins.Count)
             m_IdSkin = 0;
+
         GameManager.Instance.m_PlayerSkinID = m_IdSkin;
+
         int favoriteSkin = Mathf.Min(m_StatsManager.FavoriteSkin, m_GameManager.m_Skins.Count - 1);
-        m_BrushesPrefab.GetComponent<BrushMainMenu>().Set(GameManager.Instance.m_Skins[favoriteSkin]);
+
+        if (m_BrushesPrefab != null)
+            m_BrushesPrefab.GetComponent<BrushMainMenu>().Set(GameManager.Instance.m_Skins[favoriteSkin]);
+
         m_StatsManager.FavoriteSkin = m_IdSkin;
+
         GameManager.Instance.SetColor(GameManager.Instance.ComputeCurrentPlayerColor(true, 0));
     }
 }

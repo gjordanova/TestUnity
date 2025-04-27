@@ -7,7 +7,8 @@ public enum GamePhase
     LOADING,
     GAME,
     PRE_END,
-    END
+    END,
+    SKINSELECTION
 }
 
 public class GameManager : SingletonMB<GameManager>
