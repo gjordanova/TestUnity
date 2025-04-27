@@ -17,7 +17,8 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
 
     private GameObject currentTopBrush;
     private List<GameObject> _instantiatedBrushes = new List<GameObject>();
-    public GamePhase currentPhase { get; private set; }
+    private List<GameObject> _instantiatedSkinItems = new List<GameObject>();
+
     protected override void Awake()
     {
         base.Awake();
@@ -39,22 +40,14 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
 
     protected override void OnGamePhaseChanged(GamePhase _GamePhase)
     {
-        switch (_GamePhase)
-        {
-            case GamePhase.SKINSELECTION:
-                Transition(true);
-                break;
-            // case GamePhase.MAIN_MENU:
-            //     Transition(true);
-            //     break;
-        }
+        if (_GamePhase == GamePhase.SKINSELECTION)
+            Transition(true);
     }
 
     public void OnBackButtonPressed()
     {
-        //ClearGrid(); // First destroy all instantiated brushes
-        Transition(false); // Fade out the SkinSelectorGrid
-        GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU); // Return to MainMenu
+        Transition(false);
+        GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
     }
 
     private void PopulateGrid()
@@ -65,11 +58,12 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
             return;
         }
 
-        int totalItems = brushPrefabs.Count * brushColorsData.Count; // Dynamic
+        int totalItems = brushColorsData.Count * 2; // 6 colors × 2 brushes
 
         for (int i = 0; i < totalItems; i++)
         {
             GameObject skinItemInstance = Instantiate(skinItemPrefab, gridParent);
+            _instantiatedSkinItems.Add(skinItemInstance);
 
             Transform modelHolder = skinItemInstance.transform.Find("ModelHolder");
             if (modelHolder == null)
@@ -78,42 +72,59 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
                 continue;
             }
 
-            int brushIndex = i / brushColorsData.Count;  // 0–1
-            int colorIndex = i % brushColorsData.Count;  // 0–5
+            // --- UPDATED LOGIC ---
+            int group = (i / 3) % 2; // Switch brush every 3 fields
+            int brushIndex = group;
+            int colorIndex = i % brushColorsData.Count;
+            // ----------------------
 
             GameObject brushInstance = Instantiate(brushPrefabs[brushIndex], modelHolder);
             brushInstance.transform.localPosition = Vector3.zero;
             brushInstance.transform.localRotation = Quaternion.identity;
             brushInstance.transform.localScale = Vector3.one * 30f;
 
-            _instantiatedBrushes.Add(brushInstance); // Keep track of brush instances
+            _instantiatedBrushes.Add(brushInstance);
 
-            Renderer rend = brushInstance.GetComponentInChildren<Renderer>();
-            if (rend != null && brushColorsData[colorIndex] != null)
+            Brush brush = brushInstance.GetComponent<Brush>();
+            Color baseColor = brushColorsData[colorIndex].m_Colors[0];
+
+            if (brush != null)
             {
-                rend.material.color = brushColorsData[colorIndex].m_Colors[0];
+                foreach (Renderer renderer in brush.m_Renderers)
+                {
+                    if (renderer != null)
+                        renderer.material.color = baseColor;
+                }
             }
 
             SkinItemButton buttonScript = skinItemInstance.GetComponent<SkinItemButton>();
             if (buttonScript != null)
             {
-                buttonScript.Setup(this, brushPrefabs[brushIndex], brushColorsData[colorIndex].m_Colors[0]);
+                buttonScript.Setup(this, brushPrefabs[brushIndex], baseColor);
             }
         }
     }
 
     private void ClearGrid()
     {
-        // 1. Disable all brushes inside the grid
-        foreach (Transform child in gridParent)
+        foreach (var brush in _instantiatedBrushes)
         {
-            child.gameObject.SetActive(false);
+            if (brush != null)
+                brush.SetActive(false);
         }
+        _instantiatedBrushes.Clear();
 
-        // 2. Disable the top preview brush
+        foreach (var item in _instantiatedSkinItems)
+        {
+            if (item != null)
+                item.SetActive(false);
+        }
+        _instantiatedSkinItems.Clear();
+
         if (currentTopBrush != null)
         {
             currentTopBrush.SetActive(false);
+            currentTopBrush = null;
         }
     }
 
@@ -127,13 +138,19 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
         currentTopBrush = Instantiate(brushPrefab, topPreviewParent);
         currentTopBrush.transform.localPosition = Vector3.zero;
         currentTopBrush.transform.localRotation = Quaternion.identity;
-        currentTopBrush.transform.localScale = Vector3.one * 50f; // Bigger size
+        currentTopBrush.transform.localScale = Vector3.one * 50f;
 
-        Renderer rend = currentTopBrush.GetComponentInChildren<Renderer>();
-        if (rend != null)
+        // --- Correct coloring using Brush script ---
+        Brush brush = currentTopBrush.GetComponent<Brush>();
+        if (brush != null)
         {
-            rend.material.color = brushColor;
+            foreach (Renderer renderer in brush.m_Renderers)
+            {
+                if (renderer != null)
+                    renderer.material.color = brushColor;
+            }
         }
+        // ------------------------------------------------
     }
 
     private void AutoSelectFirstBrush()
