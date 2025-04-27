@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4365272341666342}
   - component: {fileID: 114861211813912044}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: MovingEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4681630865336014}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Articulation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4147034897989706}
   - component: {fileID: 33405873263332760}
   - component: {fileID: 23452722870084784}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Poignee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4749292286816288}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   - component: {fileID: 4778418529339912}
   - component: {fileID: 33448956300914852}
   - component: {fileID: 23627554297454600}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Manche
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4433209359481092}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Articulation_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,9 +327,9 @@ GameObject:
   - component: {fileID: 54956898024117510}
   - component: {fileID: 6846442299403909801}
   - component: {fileID: 5878669639803399268}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Brush_4
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: 2bbf1745e9cb94b0088e697af010fb17, type: 3}
+  bounceForce: 5
 --- !u!65 &5878669639803399268
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -411,7 +412,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428649729605940}
   m_Material: {fileID: 13400000, guid: 9400906fd5c4e44a5b8ebb2c36718de1, type: 2}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 2.9701562, z: 0.52238154}
@@ -425,7 +426,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4651456083930634}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Articulation_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +460,7 @@ GameObject:
   - component: {fileID: 4564083397381500}
   - component: {fileID: 198182541043075218}
   - component: {fileID: 199297094785766402}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: SpeedEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5284,7 +5285,7 @@ GameObject:
   - component: {fileID: 4360083869811416}
   - component: {fileID: 198828438632258866}
   - component: {fileID: 199667835312176244}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PaintSplash_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10108,7 +10109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4847044749293312}
   - component: {fileID: 137646426811066610}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Poils
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10200,7 +10201,7 @@ GameObject:
   - component: {fileID: 4540036325820536}
   - component: {fileID: 198668396885296396}
   - component: {fileID: 199933898270325388}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Paint_Splash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15047,7 +15048,7 @@ GameObject:
   - component: {fileID: 4163235275229736}
   - component: {fileID: 33327219588692938}
   - component: {fileID: 23610809022238902}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15128,7 +15129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4681001427060090}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Articulation_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15162,7 +15163,7 @@ GameObject:
   - component: {fileID: 4248833571047898}
   - component: {fileID: 198146024639816398}
   - component: {fileID: 199736284420580348}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PaintSplash_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19986,7 +19987,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4049862179774884}
   - component: {fileID: 65847076055485326}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20034,7 +20035,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4708470287057516}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Articulation_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}

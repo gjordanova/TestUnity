@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4690734591219468}
   - component: {fileID: 33226738076222900}
   - component: {fileID: 23940054964260394}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4512111945227234}
   - component: {fileID: 198911157862867750}
   - component: {fileID: 199989393793322848}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Paint_Splash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4941,7 +4941,7 @@ GameObject:
   - component: {fileID: 4068833527294958}
   - component: {fileID: 198793647028250176}
   - component: {fileID: 199522383486595284}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: SpeedEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9766,7 +9766,7 @@ GameObject:
   - component: {fileID: 4888909719284590}
   - component: {fileID: 33175677771883628}
   - component: {fileID: 23388432039764636}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rouleau
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9849,7 +9849,7 @@ GameObject:
   - component: {fileID: 4626186806972560}
   - component: {fileID: 33786597899117320}
   - component: {fileID: 23071028909567734}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Poignee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9932,7 +9932,7 @@ GameObject:
   - component: {fileID: 4676350070159246}
   - component: {fileID: 33596948323936130}
   - component: {fileID: 23102522265732320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Manche
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10015,7 +10015,7 @@ GameObject:
   - component: {fileID: 4798199594176670}
   - component: {fileID: 198939587275100172}
   - component: {fileID: 199439303121601724}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PaintSplash_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14839,7 +14839,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4174165365170346}
   - component: {fileID: 65942159239061790}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14887,7 +14887,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4640037550230462}
   - component: {fileID: 114550495552096482}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: MovingEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14942,9 +14942,9 @@ GameObject:
   - component: {fileID: 54662333196881260}
   - component: {fileID: 2194740893715045870}
   - component: {fileID: 1124319723463925}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Brush_1
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15018,6 +15018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: 2bbf1745e9cb94b0088e697af010fb17, type: 3}
+  bounceForce: 5
 --- !u!65 &1124319723463925
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15026,7 +15027,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944059258568796}
   m_Material: {fileID: 13400000, guid: 9400906fd5c4e44a5b8ebb2c36718de1, type: 2}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.2624164, y: 2.9395442, z: 0.65638846}
@@ -15042,7 +15043,7 @@ GameObject:
   - component: {fileID: 4034145148116146}
   - component: {fileID: 198222487774061128}
   - component: {fileID: 199791617125327182}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PaintSplash_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}

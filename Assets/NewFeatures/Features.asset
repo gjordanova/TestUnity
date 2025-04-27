@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddca69fa81d104857b9d739393b5ca33, type: 3}
   m_Name: Features
   m_EditorClassIdentifier: 
-  PlayerCollision: 0
+  PlayerCollision: 1
   SkinSelectionScreen: 0
   DailyRewards: 1
   CustomFeature: 0

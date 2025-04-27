@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4065538365864826}
   - component: {fileID: 33352456210677294}
   - component: {fileID: 23982427052250134}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Manche
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4013893958325252}
   - component: {fileID: 33309888911961110}
   - component: {fileID: 23178836999739178}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Poignee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4398459381465810}
   - component: {fileID: 198498532896921844}
   - component: {fileID: 199072244560475530}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PaintSplash_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5002,7 +5002,7 @@ GameObject:
   - component: {fileID: 4964429194245468}
   - component: {fileID: 198915631514813962}
   - component: {fileID: 199017508685484592}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: SpeedEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9827,7 +9827,7 @@ GameObject:
   - component: {fileID: 4467228978878372}
   - component: {fileID: 198294243251586228}
   - component: {fileID: 199057698239487826}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PaintSplash_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14651,7 +14651,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4376411550871116}
   - component: {fileID: 65727180673638456}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14701,7 +14701,7 @@ GameObject:
   - component: {fileID: 4555527937296052}
   - component: {fileID: 198760494338697454}
   - component: {fileID: 199779126609353004}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Paint_Splash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19548,7 +19548,7 @@ GameObject:
   - component: {fileID: 4026748838046694}
   - component: {fileID: 33214918226003076}
   - component: {fileID: 23851851625044896}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19631,7 +19631,7 @@ GameObject:
   - component: {fileID: 4081244044928958}
   - component: {fileID: 33553148826931702}
   - component: {fileID: 23381393846748884}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19716,9 +19716,9 @@ GameObject:
   - component: {fileID: 54947444440545470}
   - component: {fileID: 1884580410011754988}
   - component: {fileID: 5861612712173795021}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Brush_3
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19792,6 +19792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: 2bbf1745e9cb94b0088e697af010fb17, type: 3}
+  bounceForce: 5
 --- !u!65 &5861612712173795021
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19800,7 +19801,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763764715670532}
   m_Material: {fileID: 13400000, guid: 9400906fd5c4e44a5b8ebb2c36718de1, type: 2}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 3.1283426, z: 0.97259957}
@@ -19816,7 +19817,7 @@ GameObject:
   - component: {fileID: 4042727956539174}
   - component: {fileID: 33407410015470274}
   - component: {fileID: 23939439007957760}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Manche
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19898,7 +19899,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4640142331619276}
   - component: {fileID: 114869286679917534}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: MovingEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}

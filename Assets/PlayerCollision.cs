@@ -3,20 +3,20 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerCollision : MonoBehaviour
 {
-    public AudioClip collisionSound; // Drag your bounce sound here
+    public AudioClip collisionSound;
     private AudioSource audioSource;
     private FeatureController featureController;
 
+    public float bounceForce = 5f;
+
     private void Start()
     {
-        // Setup AudioSource
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        // Find FeatureController
         featureController = FindObjectOfType<FeatureController>();
         if (featureController == null)
         {
@@ -24,19 +24,29 @@ public class PlayerCollision : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
         if (featureController == null || !featureController.IsCollisionEnabled())
-            return; // Collision feature disabled
+            return; // Feature disabled
 
-        if (other.CompareTag("Player"))
+        // Проверка дали објектот со кој се судира е на слојот "Brush"
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Brush"))
         {
-            Vector3 bounceDirection = (transform.position - other.transform.position).normalized;
-            bounceDirection.y = 0f; // Only horizontal movement
+            // Логирање на информациите за колизијата
+            Debug.Log($"Collision detected with: {collision.gameObject.name} at {collision.contacts[0].point}");
 
-            transform.position += bounceDirection * 0.5f; // Small push back
+            Rigidbody otherRb = collision.gameObject.GetComponent<Rigidbody>();
+            Rigidbody myRb = GetComponent<Rigidbody>();
 
-            // Play collision sound
+            if (otherRb != null && myRb != null)
+            {
+                Vector3 direction = (collision.transform.position - transform.position).normalized;
+                direction.y = 0f; // Само хоризонтално движење
+
+                myRb.AddForce(-direction * bounceForce, ForceMode.Impulse);
+                otherRb.AddForce(direction * bounceForce, ForceMode.Impulse);
+            }
+
             if (collisionSound != null)
             {
                 audioSource.PlayOneShot(collisionSound);
