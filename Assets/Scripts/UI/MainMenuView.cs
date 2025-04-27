@@ -53,7 +53,7 @@ public class MainMenuView : View<MainMenuView>
     private void Start()
     {
         if (m_BrushButton != null)
-            m_BrushButton.onClick.AddListener(OnBrushButtonClicked);
+            m_BrushButton.onClick.AddListener(OnBrushButtonPressed);
 
         if (m_SkinSelectionScreen != null)
             m_SkinSelectionScreen.SetActive(false);
@@ -69,11 +69,7 @@ public class MainMenuView : View<MainMenuView>
     {
         Transition(false); // Hide MainMenuView
         GameManager.Instance.ChangePhase(GamePhase.SKINSELECTION);
-    }
-    private void OnBrushButtonClicked()
-    {
-        if (m_SkinSelectionScreen != null)
-            m_SkinSelectionScreen.SetActive(true);
+        m_SkinSelectionScreen.SetActive(true);
     }
 
     public void OnPlayButton()
@@ -91,6 +87,7 @@ public class MainMenuView : View<MainMenuView>
             case GamePhase.MAIN_MENU:
                 m_BrushGroundLight.SetActive(true);
                 Transition(true);
+                m_SkinSelectionScreen.SetActive(false);
                 break;
 
             case GamePhase.LOADING:
@@ -98,6 +95,12 @@ public class MainMenuView : View<MainMenuView>
                 m_BrushesPrefab.SetActive(false);
                 if (m_Visible)
                     Transition(false);
+                break;
+            case GamePhase.SKINSELECTION:
+                m_BrushGroundLight.SetActive(false);
+                m_BrushesPrefab.SetActive(false);
+                if (m_Visible)
+                    Transition(true);
                 break;
         }
     }
