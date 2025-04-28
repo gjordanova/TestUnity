@@ -149,11 +149,20 @@ public class GameManager : SingletonMB<GameManager>
 
     public void SetColor(int colorIndex)
     {
-        colorIndex = Mathf.Min(m_Colors.Count - 1, colorIndex);
-        Color humanColor = m_Colors[colorIndex];
-        RVEndView.Instance.SetTitleColor(humanColor);
-        m_MainMenuView.SetTitleColor(humanColor);
-        LoadingView.Instance.SetTitleColor(humanColor);
+        // If we have a selected skin color, use it
+        Color colorToUse = m_SelectedSkinColor;
+        
+        // If no skin color is selected, fall back to the color index
+        if (colorToUse == default(Color))
+        {
+            colorIndex = Mathf.Min(m_Colors.Count - 1, colorIndex);
+            colorToUse = m_Colors[colorIndex];
+        }
+
+        // Apply the color to all views
+        RVEndView.Instance.SetTitleColor(colorToUse);
+        m_MainMenuView.SetTitleColor(colorToUse);
+        LoadingView.Instance.SetTitleColor(colorToUse);
     }
 
     public void ChangePhase(GamePhase _GamePhase)
