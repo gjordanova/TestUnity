@@ -448,7 +448,7 @@ PrefabInstance:
         type: 3}
       propertyPath: coinsTarget
       value: 
-      objectReference: {fileID: 748797365}
+      objectReference: {fileID: 512672592}
     - target: {fileID: 2869519382337615845, guid: a41b0d9c53f544e3d82a6511ccca8680,
         type: 3}
       propertyPath: coinsVisualPrefab
@@ -2112,12 +2112,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1054396209444862, guid: ade9dc1200e32bb45ad4a7d1f3cda793,
     type: 3}
   m_PrefabInstance: {fileID: 559951454}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &748797365 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5939630871011716590, guid: a41b0d9c53f544e3d82a6511ccca8680,
-    type: 3}
-  m_PrefabInstance: {fileID: 92449356}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &797830664
 PrefabInstance:

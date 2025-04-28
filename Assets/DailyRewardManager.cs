@@ -62,7 +62,7 @@ public class DailyRewardManager : MonoBehaviour
         UpdateCurrencyText();
         claimButton.onClick.RemoveAllListeners(); // ➡️ осигурај дека нема удвоено слушачи
         claimButton.onClick.AddListener(ClaimReward);
-
+        GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
         CheckDailyReward();
     }
 
@@ -187,6 +187,7 @@ public class DailyRewardManager : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         
         dailyRewardPanel.SetActive(false);
+        GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
     }
 
     private void ClaimReward()

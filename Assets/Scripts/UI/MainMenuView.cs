@@ -86,6 +86,7 @@ public class MainMenuView : View<MainMenuView>
         {
             case GamePhase.MAIN_MENU:
                 m_BrushGroundLight.SetActive(true);
+                m_BrushesPrefab.SetActive(true);
                 Transition(true);
                 m_SkinSelectionScreen.SetActive(false);
                 break;
@@ -104,11 +105,11 @@ public class MainMenuView : View<MainMenuView>
                     Transition(true);
                 break;
 
-            // case GamePhase.DAILYREWARD:
-            //     m_BrushGroundLight.SetActive(false);
-            //     m_BrushesPrefab.SetActive(false);
-            //     Transition(false);  // Always transition to false, regardless of current visibility
-            //     break;
+            case GamePhase.DAILYREWARD:
+                //m_BrushGroundLight.SetActive(false);
+                m_BrushesPrefab.SetActive(false);
+                //Transition(false);  // Always transition to false, regardless of current visibility
+                break;
         }
     }
 
