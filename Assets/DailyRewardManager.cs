@@ -87,6 +87,7 @@ public class DailyRewardManager : MonoBehaviour
                 currentDayIndex++;
                 if (currentDayIndex >= dailyRewards.Length)
                     currentDayIndex = dailyRewards.Length - 1;
+
             }
             else
             {
@@ -96,6 +97,7 @@ public class DailyRewardManager : MonoBehaviour
         else
         {
             currentDayIndex = 0;
+           
         }
 
         UpdateRewardList();

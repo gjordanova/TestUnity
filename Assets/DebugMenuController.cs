@@ -152,26 +152,20 @@ public class DebugMenuController : MonoBehaviour
         if (featureController.featureData != null)
         {
             featureController.featureData.DailyRewards = enabled;
-            
-            // Update DailyRewardManager if it exists
+        
             if (dailyRewardManager != null)
             {
                 dailyRewardManager.gameObject.SetActive(enabled);
                 if (enabled)
                 {
+                    // Force check daily rewards immediately
                     dailyRewardManager.CheckDailyReward();
+                    GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
                 }
-                else
+                else if (GameManager.Instance.currentPhase == GamePhase.DAILYREWARD)
                 {
-                    if (dailyRewardManager.dailyRewardPanel != null)
-                        dailyRewardManager.dailyRewardPanel.SetActive(false);
+                    GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
                 }
-            }
-
-            // If we're disabling daily rewards and currently in daily reward phase, go back to main menu
-            if (!enabled && GameManager.Instance.currentPhase == GamePhase.DAILYREWARD)
-            {
-                GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
             }
         }
     }
