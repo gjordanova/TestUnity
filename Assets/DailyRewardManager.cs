@@ -15,14 +15,14 @@ public class DailyRewardManager : MonoBehaviour
     public Button claimButton;
     public Transform rewardListParent;
     public TextMeshProUGUI currencyText;
-    public Color highlightColor = Color.yellow; // Changed to yellow for better visibility
+    public Color highlightColor = Color.yellow; 
     public Color normalColor = Color.gray;
 
     [Header("Feature Control")]
     public FeatureData featureData;
 
     [Header("Animation Settings")]
-    public float coinAnimDuration = 1.2f;        // Increased duration for slower movement
+    public float coinAnimDuration = 1.2f;      
     public Transform coinsVisualPrefab;
     public Transform coinsTarget;
     public int numberOfCoins = 5;
@@ -60,13 +60,13 @@ public class DailyRewardManager : MonoBehaviour
         }
 
         UpdateCurrencyText();
-        claimButton.onClick.RemoveAllListeners(); // ➡️ осигурај дека нема удвоено слушачи
+        claimButton.onClick.RemoveAllListeners();
         claimButton.onClick.AddListener(ClaimReward);
         GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
         CheckDailyReward();
     }
 
-    private void CheckDailyReward()
+    public void CheckDailyReward()
     {
         DateTime today = DateTime.Today;
 
@@ -77,7 +77,8 @@ public class DailyRewardManager : MonoBehaviour
             if (lastClaimDate == today)
             {
                 dailyRewardPanel.SetActive(false);
-                claimButton.interactable = false; // ➡️ не дозволуваш клик
+                GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
+                claimButton.interactable = false; 
                 return;
             }
             else if (lastClaimDate == today.AddDays(-1))
@@ -120,7 +121,7 @@ public class DailyRewardManager : MonoBehaviour
     private void ShowRewardPopup()
     {
         dailyRewardPanel.SetActive(true);
-        claimButton.interactable = true; // ➡️ овозможи го копчето кога има право да земе
+        claimButton.interactable = true; 
     }
 
     private IEnumerator ClaimRewardRoutine()
