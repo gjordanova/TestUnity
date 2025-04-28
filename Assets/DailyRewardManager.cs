@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 using System.Collections;
+using DG.Tweening;
 
 public class DailyRewardManager : MonoBehaviour
 {
@@ -19,6 +20,12 @@ public class DailyRewardManager : MonoBehaviour
 
     [Header("Feature Control")]
     public FeatureData featureData;
+
+    [Header("Animation Settings")]
+    public float coinAnimDuration = 0.7f;
+    public float coinJumpPower = 20f;
+    public Transform coinsVisualPrefab;  // Assign a coin image prefab in inspector
+    public Transform coinsTarget;         // Where coins should fly to (usually currency UI)
 
     private TextMeshProUGUI[] dayTexts;
     private TextMeshProUGUI[] amountTexts;
@@ -118,24 +125,50 @@ public class DailyRewardManager : MonoBehaviour
 
     private IEnumerator ClaimRewardRoutine()
     {
-        claimButton.interactable = false; // Prevent multiple clicks
+        claimButton.interactable = false;
         
         int rewardAmount = dailyRewards[currentDayIndex];
 
+        // Spawn and animate coins
+        Transform rewardDay = rewardListParent.GetChild(rewardListParent.childCount - 1 - currentDayIndex);
+        Transform coinsVisual = Instantiate(coinsVisualPrefab, rewardDay.position, Quaternion.identity, transform);
+        
+        // First jump up
+        coinsVisual.DOJump(coinsVisual.position + Vector3.up * 1f, coinJumpPower, 1, 0.3f);
+        
+        // Wait for jump
+        yield return new WaitForSeconds(1.0f);
+        
+        // Then fly to target with scale animation
+        Sequence coinSequence = DOTween.Sequence();
+        coinSequence.Append(coinsVisual.DOMove(coinsTarget.position, coinAnimDuration).SetEase(Ease.InBack));
+        coinSequence.Join(coinsVisual.DOScale(0.5f, coinAnimDuration));
+        
+        yield return coinSequence.WaitForCompletion();
+        
+        // Destroy coin visual
+        Destroy(coinsVisual.gameObject);
+        
+        // Update actual currency
         int currentCurrency = PlayerPrefs.GetInt(TotalCurrencyKey, 0);
         currentCurrency += rewardAmount;
         PlayerPrefs.SetInt(TotalCurrencyKey, currentCurrency);
 
+        // Animate currency text
+        if (currencyText != null)
+        {
+            currencyText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f, 10, 1);
+        }
+        
+        UpdateCurrencyText();
         PlayerPrefs.SetString(LastClaimDateKey, DateTime.Today.ToString());
         PlayerPrefs.SetInt(CurrentStreakKey, currentDayIndex + 1);
-
         PlayerPrefs.Save();
-        Debug.Log($"Claimed {rewardAmount} coins!");
-
-        UpdateCurrencyText();
         
-        // Wait for 1 second
-        yield return new WaitForSeconds(1f);
+        Debug.Log($"Claimed {rewardAmount} coins!");
+        
+        // Wait a moment after animation
+        yield return new WaitForSeconds(0.7f);
         
         dailyRewardPanel.SetActive(false);
     }
