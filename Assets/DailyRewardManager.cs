@@ -22,10 +22,10 @@ public class DailyRewardManager : MonoBehaviour
     public FeatureData featureData;
 
     [Header("Animation Settings")]
-    public float coinAnimDuration = 0.7f;
-    public float coinJumpPower = 20f;
-    public Transform coinsVisualPrefab;  // Assign a coin image prefab in inspector
-    public Transform coinsTarget;         // Where coins should fly to (usually currency UI)
+    public float coinAnimDuration = 1.2f;        // Increased duration for slower movement
+    public Transform coinsVisualPrefab;
+    public Transform coinsTarget;
+    public int numberOfCoins = 5;
 
     private TextMeshProUGUI[] dayTexts;
     private TextMeshProUGUI[] amountTexts;
@@ -128,28 +128,44 @@ public class DailyRewardManager : MonoBehaviour
         claimButton.interactable = false;
         
         int rewardAmount = dailyRewards[currentDayIndex];
-
-        // Spawn and animate coins
-        Transform rewardDay = rewardListParent.GetChild(rewardListParent.childCount - 1 - currentDayIndex);
-        Transform coinsVisual = Instantiate(coinsVisualPrefab, rewardDay.position, Quaternion.identity, transform);
+        Vector3 buttonPosition = claimButton.transform.position;
         
-        // First jump up
-        coinsVisual.DOJump(coinsVisual.position + Vector3.up * 1f, coinJumpPower, 1, 0.3f);
+        // Spawn coins with slight offset for spread
+        for (int i = 0; i < numberOfCoins; i++)
+        {
+            Transform coinsVisual = Instantiate(coinsVisualPrefab, buttonPosition, Quaternion.identity, transform);
+            
+            // Smaller random offset for tighter grouping
+            float randomX = UnityEngine.Random.Range(-20f, 20f);
+            float randomY = UnityEngine.Random.Range(-10f, 10f);
+            Vector3 randomOffset = new Vector3(randomX, randomY, 0);
+            
+            // Longer delay between coins
+            float startDelay = i * 0.15f;
+            
+            Sequence coinSequence = DOTween.Sequence();
+            
+            // Initial small spread
+            coinSequence.Append(coinsVisual.DOMove(buttonPosition + randomOffset, 0.2f)
+                .SetEase(Ease.OutQuad)
+                .SetDelay(startDelay));
+            
+            // Direct movement to target
+            coinSequence.Append(coinsVisual.DOMove(coinsTarget.position, coinAnimDuration)
+                .SetEase(Ease.InSine));
+            
+            // Scale down near the end of movement
+            coinSequence.Join(coinsVisual.DOScale(0.3f, coinAnimDuration * 0.3f)
+                .SetDelay(coinAnimDuration * 0.7f));
+            
+            // Destroy coin when it reaches target
+            coinSequence.OnComplete(() => Destroy(coinsVisual.gameObject));
+        }
         
-        // Wait for jump
-        yield return new WaitForSeconds(1.0f);
+        // Wait for all coins to complete
+        yield return new WaitForSeconds(coinAnimDuration + 1f);
         
-        // Then fly to target with scale animation
-        Sequence coinSequence = DOTween.Sequence();
-        coinSequence.Append(coinsVisual.DOMove(coinsTarget.position, coinAnimDuration).SetEase(Ease.InBack));
-        coinSequence.Join(coinsVisual.DOScale(0.5f, coinAnimDuration));
-        
-        yield return coinSequence.WaitForCompletion();
-        
-        // Destroy coin visual
-        Destroy(coinsVisual.gameObject);
-        
-        // Update actual currency
+        // Update currency with bounce effect
         int currentCurrency = PlayerPrefs.GetInt(TotalCurrencyKey, 0);
         currentCurrency += rewardAmount;
         PlayerPrefs.SetInt(TotalCurrencyKey, currentCurrency);
@@ -167,7 +183,7 @@ public class DailyRewardManager : MonoBehaviour
         
         Debug.Log($"Claimed {rewardAmount} coins!");
         
-        // Wait a moment after animation
+        // Longer wait before closing
         yield return new WaitForSeconds(0.7f);
         
         dailyRewardPanel.SetActive(false);
