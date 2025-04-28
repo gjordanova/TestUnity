@@ -25,7 +25,7 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
         base.Awake();
         if (backButton != null)
             backButton.onClick.AddListener(OnBackButtonPressed);
-        InstantiateGridItems();
+        //InstantiateGridItems();
     }
 
     private void Start()
