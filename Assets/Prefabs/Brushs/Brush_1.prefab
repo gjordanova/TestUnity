@@ -14939,9 +14939,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4120845955954814}
   - component: {fileID: 114862830182810032}
-  - component: {fileID: 54662333196881260}
-  - component: {fileID: 2194740893715045870}
-  - component: {fileID: 1124319723463925}
+  - component: {fileID: 7482200878320920185}
+  - component: {fileID: 2542307088859230819}
   m_Layer: 10
   m_Name: Brush_1
   m_TagString: Untagged
@@ -14989,7 +14988,7 @@ MonoBehaviour:
   m_MovingEffect: {fileID: 114550495552096482}
   m_Arrow: {fileID: 1394275054425126}
   m_Type: 0
---- !u!54 &54662333196881260
+--- !u!54 &7482200878320920185
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15000,12 +14999,12 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
+  m_UseGravity: 1
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
---- !u!114 &2194740893715045870
+  m_CollisionDetection: 0
+--- !u!114 &2542307088859230819
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -15019,19 +15018,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionSound: {fileID: 8300000, guid: 2bbf1745e9cb94b0088e697af010fb17, type: 3}
   bounceForce: 5
---- !u!65 &1124319723463925
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1944059258568796}
-  m_Material: {fileID: 13400000, guid: 9400906fd5c4e44a5b8ebb2c36718de1, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.2624164, y: 2.9395442, z: 0.65638846}
-  m_Center: {x: -0.05850008, y: 1.4697721, z: 0.24680582}
 --- !u!1 &1964014362179292
 GameObject:
   m_ObjectHideFlags: 0
