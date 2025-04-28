@@ -48,15 +48,49 @@ public class DailyRewardManager : MonoBehaviour
             dailyRewardPanel.SetActive(false);
             return;
         }
+        
+        if (rewardListParent == null)
+        {
+            Debug.LogError("Reward List Parent is not assigned!");
+            return;
+        }
+
+        if (rewardListParent.childCount == 0)
+        {
+            Debug.LogError("Reward List Parent has no children!");
+            return;
+        }
 
         dayTexts = new TextMeshProUGUI[rewardListParent.childCount];
         amountTexts = new TextMeshProUGUI[rewardListParent.childCount];
 
+        bool initializationSuccessful = true;
         for (int i = 0; i < rewardListParent.childCount; i++)
         {
             Transform dayItem = rewardListParent.GetChild(i);
-            dayTexts[i] = dayItem.Find("Day").GetComponent<TextMeshProUGUI>();
-            amountTexts[i] = dayItem.Find("Amount").GetComponent<TextMeshProUGUI>();
+            Transform dayText = dayItem.Find("Day");
+            Transform amountText = dayItem.Find("Amount");
+
+            if (dayText == null || amountText == null)
+            {
+                Debug.LogError($"Day or Amount text component missing in child {i}");
+                initializationSuccessful = false;
+                continue;
+            }
+
+            dayTexts[i] = dayText.GetComponent<TextMeshProUGUI>();
+            amountTexts[i] = amountText.GetComponent<TextMeshProUGUI>();
+
+            if (dayTexts[i] == null || amountTexts[i] == null)
+            {
+                Debug.LogError($"TextMeshProUGUI component missing in child {i}");
+                initializationSuccessful = false;
+            }
+        }
+
+        if (!initializationSuccessful)
+        {
+            return;
         }
 
         UpdateCurrencyText();
@@ -76,7 +110,6 @@ public class DailyRewardManager : MonoBehaviour
 
             if (lastClaimDate == today)
             {
-                Debug.Log("test 1");
                 dailyRewardPanel.SetActive(false);
                 GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
                 claimButton.interactable = false; 
@@ -84,7 +117,6 @@ public class DailyRewardManager : MonoBehaviour
             }
             else if (lastClaimDate == today.AddDays(-1))
             {
-                Debug.Log("test 2");
                 currentDayIndex = PlayerPrefs.GetInt(CurrentStreakKey, 0);
                 currentDayIndex++;
                 if (currentDayIndex >= dailyRewards.Length)
@@ -93,14 +125,12 @@ public class DailyRewardManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("test 3");
                 currentDayIndex = 0;
             }
         }
         else
         {
             GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
-            Debug.Log("test 4");
             currentDayIndex = 0;
         }
 
@@ -212,6 +242,21 @@ public class DailyRewardManager : MonoBehaviour
         {
             int currentCurrency = PlayerPrefs.GetInt(TotalCurrencyKey, 0);
             currencyText.text = currentCurrency.ToString();
+        }
+    }
+    public void InitializeArrays()
+    {
+        if (rewardListParent == null || rewardListParent.childCount == 0)
+            return;
+
+        dayTexts = new TextMeshProUGUI[rewardListParent.childCount];
+        amountTexts = new TextMeshProUGUI[rewardListParent.childCount];
+
+        for (int i = 0; i < rewardListParent.childCount; i++)
+        {
+            Transform dayItem = rewardListParent.GetChild(i);
+            dayTexts[i] = dayItem.Find("Day").GetComponent<TextMeshProUGUI>();
+            amountTexts[i] = dayItem.Find("Amount").GetComponent<TextMeshProUGUI>();
         }
     }
 }

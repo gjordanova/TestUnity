@@ -11,6 +11,11 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
     public List<GameObject> brushPrefabs;
     public List<ColorData> brushColorsData;
     public Button backButton;
+    public Image gridItemImage;
+    public int numberOfImagesInGrid = 3;
+    [Header("Image Settings")]
+    public Vector2 imageSize = new Vector2(50, 50); // Size of the corner image
+    public Vector2 imageOffset = new Vector2(10, 10);
 
     [Header("Feature Control")]
     public FeatureData featureData;
@@ -25,7 +30,7 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
         base.Awake();
         if (backButton != null)
             backButton.onClick.AddListener(OnBackButtonPressed);
-        //InstantiateGridItems();
+        InstantiateGridItems();
     }
 
     private void Start()
@@ -35,7 +40,14 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
             gameObject.SetActive(false);
             return;
         }
-
+        if (featureData.CustomFeature)
+        {
+            gridItemImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            gridItemImage.gameObject.SetActive(false);
+        }
         PopulateGrid();
         AutoSelectFirstBrush();
     }
@@ -54,34 +66,54 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
 
     public void PopulateGrid()
     {
-        // Initial validation
+        
         if (brushPrefabs.Count == 0 || brushColorsData.Count == 0)
         {
             Debug.LogError("[SkinSelectorGrid] Brush prefabs or ColorData not assigned properly!");
             return;
         }
 
-        // Debug available resources
+       
         Debug.Log($"[SkinSelectorGrid] Initializing grid with {brushPrefabs.Count} brush prefabs and {brushColorsData.Count} color sets");
         for (int i = 0; i < brushPrefabs.Count; i++)
         {
             Debug.Log($"[SkinSelectorGrid] Available brush prefab {i}: {brushPrefabs[i].name}");
         }
 
-        // Clear existing items if any
+       
         ClearGrid();
 
-        // Calculate total items (number of colors × number of brush types)
+      
         int totalItems = brushColorsData.Count * brushPrefabs.Count;
         Debug.Log($"[SkinSelectorGrid] Creating {totalItems} total grid items");
+        HashSet<int> imagePositions = new HashSet<int>();
+        while (imagePositions.Count < numberOfImagesInGrid)
+        {
+            imagePositions.Add(Random.Range(0, totalItems));
+        }
 
         for (int i = 0; i < totalItems; i++)
         {
-            // Create skin item instance
+           
             GameObject skinItemInstance = Instantiate(skinItemPrefab, gridParent);
             _instantiatedSkinItems.Add(skinItemInstance);
-
-            // Find model holder
+            
+                if (imagePositions.Contains(i) && gridItemImage != null)
+                {
+                    Image imageInstance = Instantiate(gridItemImage, skinItemInstance.transform);
+                    RectTransform rectTransform = imageInstance.rectTransform;
+            
+                    // Set the anchor to bottom left
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.zero;
+                    rectTransform.pivot = Vector2.zero;
+            
+                    // Set size and position
+                    rectTransform.sizeDelta = imageSize;
+                    rectTransform.anchoredPosition = imageOffset;
+                } 
+            
+    
             Transform modelHolder = skinItemInstance.transform.Find("ModelHolder");
             if (modelHolder == null)
             {
@@ -89,22 +121,22 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
                 continue;
             }
 
-            // Calculate brush and color indices
+           
             int brushIndex = (i / brushColorsData.Count) % brushPrefabs.Count;
             int colorIndex = i % brushColorsData.Count;
 
             Debug.Log($"[SkinSelectorGrid] Item {i}: Using brush {brushIndex} with color {colorIndex}");
 
-            // Instantiate brush
+           
             GameObject brushInstance = Instantiate(brushPrefabs[brushIndex], modelHolder);
             _instantiatedBrushes.Add(brushInstance);
 
-            // Set transform values
+          
             brushInstance.transform.localPosition = Vector3.zero;
             brushInstance.transform.localRotation = Quaternion.identity;
             brushInstance.transform.localScale = Vector3.one * 30f;
 
-            // Get and apply color
+           
             Color baseColor = brushColorsData[colorIndex].m_Colors[0];
             Brush brush = brushInstance.GetComponent<Brush>();
         
@@ -128,7 +160,7 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
                 Debug.LogError($"[SkinSelectorGrid] Brush component missing on prefab at index {i}");
             }
 
-            // Setup button
+           
             SkinItemButton buttonScript = skinItemInstance.GetComponent<SkinItemButton>();
             if (buttonScript != null)
             {
@@ -177,8 +209,7 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
         currentTopBrush.transform.localPosition = Vector3.zero;
         currentTopBrush.transform.localRotation = Quaternion.identity;
         currentTopBrush.transform.localScale = Vector3.one * 50f;
-
-        // --- Correct coloring using Brush script ---
+        
         Brush brush = currentTopBrush.GetComponent<Brush>();
         if (brush != null)
         {
@@ -188,7 +219,7 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
                     renderer.material.color = brushColor;
             }
         }
-        // ------------------------------------------------
+       
     }
 
     public void AutoSelectFirstBrush()
@@ -201,17 +232,17 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
 
     public void InstantiateGridItems()
     {
-        // Store current active state
+       
         bool wasActive = gameObject.activeSelf;
         
-        // Temporarily activate if needed
+      
         if (!wasActive)
             gameObject.SetActive(true);
         
-        // Your existing grid population logic here
-        PopulateGrid();  // Or whatever your method is called
+      
+        PopulateGrid(); 
         AutoSelectFirstBrush();
-        // Restore previous state
+      
         if (!wasActive)
             gameObject.SetActive(false);
     }

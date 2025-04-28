@@ -128,28 +128,28 @@ private void OnSkinSelectionToggled(bool enabled)
     }
 }
 
-    private void OnDailyRewardsToggled(bool enabled)
+private void OnDailyRewardsToggled(bool enabled)
+{
+    if (featureController.featureData != null)
     {
-        if (featureController.featureData != null)
+        featureController.featureData.DailyRewards = enabled;
+    
+        if (dailyRewardManager != null)
         {
-            featureController.featureData.DailyRewards = enabled;
-        
-            if (dailyRewardManager != null)
+            // First deactivate
+            dailyRewardManager.gameObject.SetActive(false);
+            
+            if (enabled)
             {
-                dailyRewardManager.gameObject.SetActive(enabled);
-                if (enabled)
-                {
-                  
-                    dailyRewardManager.CheckDailyReward();
-                   
-                }
-                else if (GameManager.Instance.currentPhase == GamePhase.DAILYREWARD)
-                {
-                  
-                }
+                // Then activate and initialize
+                dailyRewardManager.gameObject.SetActive(true);
+                // This will trigger the Start method again to properly initialize
+                //dailyRewardManager.Start();
+                dailyRewardManager.CheckDailyReward();
             }
         }
     }
+}
 
     private void OnCustomFeatureToggled(bool enabled)
     {
