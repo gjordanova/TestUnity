@@ -50,8 +50,7 @@ public class GameManager : SingletonMB<GameManager>
     public List<int> m_XPByRank;
 
     public bool m_AlreadyRevive = false;
-
-    // Cache
+    
     private StatsManager m_StatsManager;
     private ProgressionView m_ProgressionView;
     private MainMenuView m_MainMenuView;
@@ -67,8 +66,7 @@ public class GameManager : SingletonMB<GameManager>
     private float m_LastBrushTime = 0f;
     private float m_PowerUpRate;
     private Vector3 m_SpotlightOffset;
-
-    // Buffers
+    
     private Vector3 m_PosBuffer;
 
     public List<BrushData> m_Brushs;

@@ -62,7 +62,7 @@ public class DailyRewardManager : MonoBehaviour
         UpdateCurrencyText();
         claimButton.onClick.RemoveAllListeners();
         claimButton.onClick.AddListener(ClaimReward);
-        GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
+        
         CheckDailyReward();
     }
 
@@ -76,6 +76,7 @@ public class DailyRewardManager : MonoBehaviour
 
             if (lastClaimDate == today)
             {
+                Debug.Log("test 1");
                 dailyRewardPanel.SetActive(false);
                 GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
                 claimButton.interactable = false; 
@@ -83,6 +84,7 @@ public class DailyRewardManager : MonoBehaviour
             }
             else if (lastClaimDate == today.AddDays(-1))
             {
+                Debug.Log("test 2");
                 currentDayIndex = PlayerPrefs.GetInt(CurrentStreakKey, 0);
                 currentDayIndex++;
                 if (currentDayIndex >= dailyRewards.Length)
@@ -91,13 +93,15 @@ public class DailyRewardManager : MonoBehaviour
             }
             else
             {
+                Debug.Log("test 3");
                 currentDayIndex = 0;
             }
         }
         else
         {
+            GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
+            Debug.Log("test 4");
             currentDayIndex = 0;
-           
         }
 
         UpdateRewardList();
@@ -106,6 +110,12 @@ public class DailyRewardManager : MonoBehaviour
 
     private void UpdateRewardList()
     {
+        if (dayTexts == null || amountTexts == null || dayTexts.Length == 0 || amountTexts.Length == 0)
+        {
+            Debug.LogError("Daily reward text arrays are not properly initialized!");
+            return;
+        }
+
         int totalDays = dayTexts.Length;
 
         for (int i = 0; i < totalDays; i++)
@@ -129,51 +139,49 @@ public class DailyRewardManager : MonoBehaviour
     private IEnumerator ClaimRewardRoutine()
     {
         claimButton.interactable = false;
-        
         int rewardAmount = dailyRewards[currentDayIndex];
         Vector3 buttonPosition = claimButton.transform.position;
         
-        // Spawn coins with slight offset for spread
+       
         for (int i = 0; i < numberOfCoins; i++)
         {
             Transform coinsVisual = Instantiate(coinsVisualPrefab, buttonPosition, Quaternion.identity, transform);
             
-            // Smaller random offset for tighter grouping
+          
             float randomX = UnityEngine.Random.Range(-20f, 20f);
             float randomY = UnityEngine.Random.Range(-10f, 10f);
             Vector3 randomOffset = new Vector3(randomX, randomY, 0);
             
-            // Longer delay between coins
+        
             float startDelay = i * 0.15f;
             
             Sequence coinSequence = DOTween.Sequence();
             
-            // Initial small spread
+           
             coinSequence.Append(coinsVisual.DOMove(buttonPosition + randomOffset, 0.2f)
                 .SetEase(Ease.OutQuad)
                 .SetDelay(startDelay));
             
-            // Direct movement to target
+          
             coinSequence.Append(coinsVisual.DOMove(coinsTarget.position, coinAnimDuration)
                 .SetEase(Ease.InSine));
             
-            // Scale down near the end of movement
+         
             coinSequence.Join(coinsVisual.DOScale(0.3f, coinAnimDuration * 0.3f)
                 .SetDelay(coinAnimDuration * 0.7f));
             
-            // Destroy coin when it reaches target
+         
             coinSequence.OnComplete(() => Destroy(coinsVisual.gameObject));
         }
         
-        // Wait for all coins to complete
         yield return new WaitForSeconds(coinAnimDuration + 1f);
         
-        // Update currency with bounce effect
+      
         int currentCurrency = PlayerPrefs.GetInt(TotalCurrencyKey, 0);
         currentCurrency += rewardAmount;
         PlayerPrefs.SetInt(TotalCurrencyKey, currentCurrency);
 
-        // Animate currency text
+     
         if (currencyText != null)
         {
             currencyText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f, 10, 1);
@@ -186,7 +194,7 @@ public class DailyRewardManager : MonoBehaviour
         
         Debug.Log($"Claimed {rewardAmount} coins!");
         
-        // Longer wait before closing
+    
         yield return new WaitForSeconds(0.7f);
         
         dailyRewardPanel.SetActive(false);

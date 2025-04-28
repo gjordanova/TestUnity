@@ -22,12 +22,12 @@ public class MainMenuView : View<MainMenuView>
     public RankingView m_RankingView;
 
     [Header("Brush Selection UI")]
-    public Button m_BrushButton;         // Only the button!
-    public GameObject m_SkinSelectionScreen; // The grid screen
-    public GameObject m_BrushSelect; // The grid screen
+    public Button m_BrushButton;         
+    public GameObject m_SkinSelectionScreen; 
+    public GameObject m_BrushSelect; 
 
     [Header("Feature Control")]
-    public FeatureData m_FeatureData;    // ScriptableObject
+    public FeatureData m_FeatureData;    
 
     private StatsManager m_StatsManager;
 
@@ -67,7 +67,7 @@ public class MainMenuView : View<MainMenuView>
     }
     public void OnBrushButtonPressed()
     {
-        Transition(false); // Hide MainMenuView
+        Transition(false); 
         GameManager.Instance.ChangePhase(GamePhase.SKINSELECTION);
         m_SkinSelectionScreen.SetActive(true);
     }
@@ -106,9 +106,7 @@ public class MainMenuView : View<MainMenuView>
                 break;
 
             case GamePhase.DAILYREWARD:
-                //m_BrushGroundLight.SetActive(false);
                 m_BrushesPrefab.SetActive(false);
-                //Transition(false);  // Always transition to false, regardless of current visibility
                 break;
         }
     }

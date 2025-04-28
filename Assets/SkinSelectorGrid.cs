@@ -21,9 +21,11 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
 
     protected override void Awake()
     {
+        
         base.Awake();
         if (backButton != null)
             backButton.onClick.AddListener(OnBackButtonPressed);
+        InstantiateGridItems();
     }
 
     private void Start()
@@ -50,7 +52,7 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
         GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
     }
 
-    private void PopulateGrid()
+    public void PopulateGrid()
     {
         // Initial validation
         if (brushPrefabs.Count == 0 || brushColorsData.Count == 0)
@@ -189,11 +191,28 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
         // ------------------------------------------------
     }
 
-    private void AutoSelectFirstBrush()
+    public void AutoSelectFirstBrush()
     {
         if (brushPrefabs.Count > 0 && brushColorsData.Count > 0)
         {
             UpdateTopBrush(brushPrefabs[0], brushColorsData[0].m_Colors[0]);
         }
+    }
+
+    public void InstantiateGridItems()
+    {
+        // Store current active state
+        bool wasActive = gameObject.activeSelf;
+        
+        // Temporarily activate if needed
+        if (!wasActive)
+            gameObject.SetActive(true);
+        
+        // Your existing grid population logic here
+        PopulateGrid();  // Or whatever your method is called
+        AutoSelectFirstBrush();
+        // Restore previous state
+        if (!wasActive)
+            gameObject.SetActive(false);
     }
 }

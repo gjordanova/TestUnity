@@ -26,7 +26,6 @@ public class DebugMenuController : MonoBehaviour
 
     private void Start()
     {
-        // Get reference to FeatureController
         featureController = FindObjectOfType<FeatureController>();
         
         if (featureController == null)
@@ -35,17 +34,15 @@ public class DebugMenuController : MonoBehaviour
             return;
         }
 
-        // Initialize toggles with current feature states
         InitializeToggles();
 
-        // Add listeners to toggle events
+       
         playerCollisionToggle.onValueChanged.AddListener(OnPlayerCollisionToggled);
         skinSelectionToggle.onValueChanged.AddListener(OnSkinSelectionToggled);
         dailyRewardsToggle.onValueChanged.AddListener(OnDailyRewardsToggled);
         customFeatureToggle.onValueChanged.AddListener(OnCustomFeatureToggled);
         closeButton.onClick.AddListener(CloseDebugMenu);
-
-        // Hide debug menu by default
+        
         debugMenuPanel.SetActive(false);
     }
 
@@ -114,38 +111,22 @@ public class DebugMenuController : MonoBehaviour
         }
     }
 
-    private void OnSkinSelectionToggled(bool enabled)
+private void OnSkinSelectionToggled(bool enabled)
+{
+    if (featureController.featureData != null)
     {
-        if (featureController.featureData != null)
-        {
-            featureController.featureData.SkinSelectionScreen = enabled;
+        featureController.SetSkinSelection(enabled);
         
-            // Update MainMenuView UI elements
-            if (mainMenuView != null)
-            {
-                if (mainMenuView.m_BrushButton != null)
-                    mainMenuView.m_BrushButton.gameObject.SetActive(enabled);
+        if (mainMenuView != null)
+        {
+            if (mainMenuView.m_BrushButton != null)
+                mainMenuView.m_BrushButton.gameObject.SetActive(enabled);
             
-                if (mainMenuView.m_BrushSelect != null)
-                    mainMenuView.m_BrushSelect.SetActive(!enabled);
-            
-                if (mainMenuView.m_SkinSelectionScreen != null)
-                    mainMenuView.m_SkinSelectionScreen.SetActive(false);
-            }
-
-            // Update SkinSelector if it exists
-            if (skinSelector != null)
-            {
-                // Since we can't call PopulateGrid directly, we'll disable and enable the object
-                // which will trigger its Start() method that includes PopulateGrid
-                skinSelector.gameObject.SetActive(false);
-                if (enabled)
-                {
-                    skinSelector.gameObject.SetActive(true);
-                }
-            }
+            if (mainMenuView.m_BrushSelect != null)
+                mainMenuView.m_BrushSelect.SetActive(!enabled);
         }
     }
+}
 
     private void OnDailyRewardsToggled(bool enabled)
     {
@@ -158,13 +139,13 @@ public class DebugMenuController : MonoBehaviour
                 dailyRewardManager.gameObject.SetActive(enabled);
                 if (enabled)
                 {
-                    // Force check daily rewards immediately
+                  
                     dailyRewardManager.CheckDailyReward();
-                    GameManager.Instance.ChangePhase(GamePhase.DAILYREWARD);
+                   
                 }
                 else if (GameManager.Instance.currentPhase == GamePhase.DAILYREWARD)
                 {
-                    GameManager.Instance.ChangePhase(GamePhase.MAIN_MENU);
+                  
                 }
             }
         }
@@ -175,14 +156,14 @@ public class DebugMenuController : MonoBehaviour
         if (featureController.featureData != null)
         {
             featureController.featureData.CustomFeature = enabled;
-            // Add custom feature implementation here
+           
         }
     }
 
     public void OpenDebugMenu()
     {
         debugMenuPanel.SetActive(true);
-        InitializeToggles(); // Refresh toggle states when opening
+        InitializeToggles();
     }
 
     public void CloseDebugMenu()
@@ -194,22 +175,20 @@ public class DebugMenuController : MonoBehaviour
     {
         if (featureController.featureData != null)
         {
-            // Disable all features
             featureController.featureData.PlayerCollision = false;
             featureController.featureData.SkinSelectionScreen = false;
             featureController.featureData.DailyRewards = false;
             featureController.featureData.CustomFeature = false;
 
-            // Update UI
+           
             InitializeToggles();
 
-            // Trigger all feature updates
+           
             OnPlayerCollisionToggled(false);
             OnSkinSelectionToggled(false);
             OnDailyRewardsToggled(false);
             OnCustomFeatureToggled(false);
-
-            // If in game, restart to apply changes
+            
             if (GameManager.Instance.currentPhase == GamePhase.GAME)
             {
                 GameManager.Instance.ClearGame();

@@ -1040,9 +1040,9 @@ MonoBehaviour:
   dailyRewardsToggle: {fileID: 829773870}
   customFeatureToggle: {fileID: 467621090}
   closeButton: {fileID: 782807956}
-  mainMenuView: {fileID: 0}
-  skinSelector: {fileID: 0}
-  dailyRewardManager: {fileID: 0}
+  mainMenuView: {fileID: 1086145443}
+  skinSelector: {fileID: 1306949720}
+  dailyRewardManager: {fileID: 1427146261}
   tapTimeThreshold: 1
   tapAreaSize: 100
 --- !u!114 &411062490
@@ -3580,6 +3580,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7379504124865125273}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1306949720 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7379504125735330752, guid: 3739edc7882c94fbd8d0e0e0f8d83635,
+    type: 3}
+  m_PrefabInstance: {fileID: 7379504124865125273}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481453428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d02a6d8f04c849d295b965559d86516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &1333426468 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 20220403025280884, guid: 11f6e2335571ef14ab8fc073795c5345,
@@ -4051,6 +4063,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409936706}
   m_CullTransparentMesh: 1
+--- !u!114 &1427146261 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2869519382337615845, guid: a41b0d9c53f544e3d82a6511ccca8680,
+    type: 3}
+  m_PrefabInstance: {fileID: 92449356}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d2a6d4d3d6584f6e909915896218d6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1430247047
 GameObject:
   m_ObjectHideFlags: 0
@@ -4526,21 +4550,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1393614798}
     m_Modifications:
-    - target: {fileID: 7379504123972764595, guid: 3739edc7882c94fbd8d0e0e0f8d83635,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -75
-      objectReference: {fileID: 0}
-    - target: {fileID: 7379504123972764595, guid: 3739edc7882c94fbd8d0e0e0f8d83635,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7379504123972764595, guid: 3739edc7882c94fbd8d0e0e0f8d83635,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 311
-      objectReference: {fileID: 0}
     - target: {fileID: 7379504125735330766, guid: 3739edc7882c94fbd8d0e0e0f8d83635,
         type: 3}
       propertyPath: m_Pivot.x
@@ -4650,11 +4659,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SkinSelectionScreen
-      objectReference: {fileID: 0}
-    - target: {fileID: 7379504125735330767, guid: 3739edc7882c94fbd8d0e0e0f8d83635,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3739edc7882c94fbd8d0e0e0f8d83635, type: 3}
