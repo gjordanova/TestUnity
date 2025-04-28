@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using System.Collections;
 
 public class DailyRewardManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class DailyRewardManager : MonoBehaviour
     public Button claimButton;
     public Transform rewardListParent;
     public TextMeshProUGUI currencyText;
-    public Color highlightColor = Color.white;
+    public Color highlightColor = Color.yellow; // Changed to yellow for better visibility
     public Color normalColor = Color.gray;
 
     [Header("Feature Control")]
@@ -115,8 +116,10 @@ public class DailyRewardManager : MonoBehaviour
         claimButton.interactable = true; // ➡️ овозможи го копчето кога има право да земе
     }
 
-    private void ClaimReward()
+    private IEnumerator ClaimRewardRoutine()
     {
+        claimButton.interactable = false; // Prevent multiple clicks
+        
         int rewardAmount = dailyRewards[currentDayIndex];
 
         int currentCurrency = PlayerPrefs.GetInt(TotalCurrencyKey, 0);
@@ -130,7 +133,16 @@ public class DailyRewardManager : MonoBehaviour
         Debug.Log($"Claimed {rewardAmount} coins!");
 
         UpdateCurrencyText();
+        
+        // Wait for 1 second
+        yield return new WaitForSeconds(1f);
+        
         dailyRewardPanel.SetActive(false);
+    }
+
+    private void ClaimReward()
+    {
+        StartCoroutine(ClaimRewardRoutine());
     }
 
     private void UpdateCurrencyText()

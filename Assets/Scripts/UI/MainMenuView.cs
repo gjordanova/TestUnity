@@ -96,12 +96,19 @@ public class MainMenuView : View<MainMenuView>
                 if (m_Visible)
                     Transition(false);
                 break;
+
             case GamePhase.SKINSELECTION:
                 m_BrushGroundLight.SetActive(false);
                 m_BrushesPrefab.SetActive(false);
                 if (m_Visible)
                     Transition(true);
                 break;
+
+            // case GamePhase.DAILYREWARD:
+            //     m_BrushGroundLight.SetActive(false);
+            //     m_BrushesPrefab.SetActive(false);
+            //     Transition(false);  // Always transition to false, regardless of current visibility
+            //     break;
         }
     }
 
@@ -126,6 +133,7 @@ public class MainMenuView : View<MainMenuView>
 
         m_RankingView.gameObject.SetActive(true);
         m_RankingView.RefreshNormal();
+        m_BrushButton.GetComponent<Image>().color = _Color;
     }
 
     public void OnSetPlayerName(string _Name)
