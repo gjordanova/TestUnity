@@ -3,101 +3,85 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerCollision : MonoBehaviour
 {
-    public AudioClip collisionSound;
-    private AudioSource audioSource;
-    private FeatureController featureController;
+    [SerializeField] private AudioClip bounceSoundClip;
+    [SerializeField] private float bounceRecoveryTime = 1f;
+    [SerializeField] private float shrinkScale = 0.5f;
+    [SerializeField] private float expandScale = 1.5f;
+    [SerializeField] private float soundVolume = 1f;
+
     private Rigidbody rb;
     private Player player;
+    private bool isRecovering;
+    private Vector3 originalScale;
+    private BattleRoyaleManager battleRoyaleManager;
 
-    public float bounceForce = 5f;
-    private bool isCollisionEnabled = true;
-
-    private void Start()
+    void Start()
     {
-        // Cache components
-        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         player = GetComponent<Player>();
-        
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-
-        featureController = FindObjectOfType<FeatureController>();
-        if (featureController == null)
-        {
-            Debug.LogError("FeatureController not found in the scene!");
-        }
-
-        // Setup rigidbody for better collision handling
-        if (rb != null)
-        {
-            rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
-            rb.isKinematic = false;
-            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        }
+        originalScale = transform.localScale;
+        battleRoyaleManager = BattleRoyaleManager.Instance;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        if (!isCollisionEnabled || featureController == null || !featureController.IsCollisionEnabled())
+        if (isRecovering) return;
+
+        // Ignore collisions if player is eliminated or dead
+        if (player != null && (player.isEliminated || player.isDead))
             return;
 
+        // Check if the collided object is part of the "Brush" layer
         if (collision.gameObject.layer == LayerMask.NameToLayer("Brush"))
         {
-            HandleBrushCollision(collision);
-        }
-    }
-
-    private void HandleBrushCollision(Collision collision)
-    {
-        Rigidbody otherRb = collision.gameObject.GetComponent<Rigidbody>();
-        
-        if (otherRb != null && rb != null)
-        {
-            // Calculate collision direction
-            Vector3 direction = (collision.transform.position - transform.position).normalized;
-            direction.y = 0f; // Keep movement horizontal
-
-            // Apply bounce forces
-            rb.AddForce(-direction * bounceForce, ForceMode.Impulse);
-            otherRb.AddForce(direction * bounceForce, ForceMode.Impulse);
-
-            // Temporarily stop drawing while bouncing
-            if (player != null)
+            // Apply collision force
+            if (rb != null)
             {
-                StartCoroutine(BounceRecoveryRoutine());
+                Vector3 force = collision.contacts[0].normal * 10f;
+                rb.AddForce(-force, ForceMode.Impulse);
             }
 
-            // Play sound effect
-            if (collisionSound != null && audioSource != null)
+            // Play bounce sound during gameplay using AudioClip
+            if (battleRoyaleManager.m_IsPlaying)
             {
-                audioSource.PlayOneShot(collisionSound);
+                if (bounceSoundClip != null)
+                {
+                    AudioSource.PlayClipAtPoint(bounceSoundClip, transform.position, soundVolume);
+                }
             }
+
+            // Start the visual bounce effect
+            StartCoroutine(BounceRecoveryRoutine());
         }
     }
 
     private System.Collections.IEnumerator BounceRecoveryRoutine()
     {
-        // Stop drawing
-        foreach (DrawLine drawLine in player.GetComponents<DrawLine>())
+        isRecovering = true;
+
+        if (rb != null)
         {
-            drawLine.StopDraw();
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
-        // Wait a short moment for the bounce to settle
-        yield return new WaitForSeconds(0.1f);
+        transform.localScale = originalScale * shrinkScale;
+        yield return new WaitForSeconds(0.05f);
 
-        // Resume drawing
-        foreach (DrawLine drawLine in player.GetComponents<DrawLine>())
+        transform.localScale = originalScale * expandScale;
+        yield return new WaitForSeconds(0.05f);
+
+        float elapsedTime = 0;
+        Vector3 startScale = transform.localScale;
+
+        while (elapsedTime < 0.1f)
         {
-            drawLine.StartDraw();
+            elapsedTime += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(startScale, originalScale, elapsedTime / 0.1f);
+            yield return null;
         }
-    }
 
-    public void SetCollisionEnabled(bool enabled)
-    {
-        isCollisionEnabled = enabled;
+        transform.localScale = originalScale;
+        isRecovering = false;
     }
 }

@@ -119,8 +119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed366c0e9d112412db02bd0ce5783313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionSound: {fileID: 8300000, guid: 2bbf1745e9cb94b0088e697af010fb17, type: 3}
-  bounceForce: 5
+  bounceSoundClip: {fileID: 8300000, guid: 2bbf1745e9cb94b0088e697af010fb17, type: 3}
+  bounceRecoveryTime: 1
+  shrinkScale: 0.5
+  expandScale: 1.5
+  soundVolume: 1
 --- !u!1 &1085076167256746
 GameObject:
   m_ObjectHideFlags: 0
