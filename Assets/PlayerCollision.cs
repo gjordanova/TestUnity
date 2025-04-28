@@ -14,6 +14,7 @@ public class PlayerCollision : MonoBehaviour
     private bool isRecovering;
     private Vector3 originalScale;
     private BattleRoyaleManager battleRoyaleManager;
+    private FeatureController featureController;
 
     void Start()
     {
@@ -21,10 +22,20 @@ public class PlayerCollision : MonoBehaviour
         player = GetComponent<Player>();
         originalScale = transform.localScale;
         battleRoyaleManager = BattleRoyaleManager.Instance;
+
+        // Find the FeatureController in the scene
+        featureController = FindObjectOfType<FeatureController>();
+        if (featureController == null)
+        {
+            Debug.LogError("FeatureController not found!");
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        // Check if collisions are enabled
+        if (featureController != null && !featureController.IsCollisionEnabled()) return;
+
         if (isRecovering) return;
 
         // Ignore collisions if player is eliminated or dead
@@ -41,7 +52,7 @@ public class PlayerCollision : MonoBehaviour
                 rb.AddForce(-force, ForceMode.Impulse);
             }
 
-            // Play bounce sound during gameplay using AudioClip
+            // Play bounce sound during gameplay using the AudioClip
             if (battleRoyaleManager.m_IsPlaying)
             {
                 if (bounceSoundClip != null)
