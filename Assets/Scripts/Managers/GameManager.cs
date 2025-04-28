@@ -284,14 +284,20 @@ public class GameManager : SingletonMB<GameManager>
         playerGo = Instantiate((_Human == true) ? m_HumanPlayer : m_IAPlayer, _Position, Quaternion.identity) as GameObject;
         player = playerGo.GetComponent<Player>();
 
-#if UNITY_EDITOR
-        Debug.Log("m_PlayerSkinID : " + m_PlayerSkinID);
-        Debug.Log("Human : " + _Human);
-#endif
-
-        int brushIndex = ComputeCurrentPlayeBrushIndex(_Human, _Index);
-        int colorIndex = ComputeCurrentPlayerColor(_Human, _Index);
-        player.Init(m_PlayerNameData.PickName(), m_Brushs[brushIndex], m_Colors[colorIndex]);
+        if (_Human && m_SelectedSkinPrefab != null)
+        {
+            // Use the selected skin for human player
+            // Find the brush data that matches the selected prefab
+            BrushData selectedBrush = m_Brushs.Find(brush => brush.m_Prefab == m_SelectedSkinPrefab);
+            player.Init(m_PlayerNameData.PickName(), selectedBrush, m_SelectedSkinColor);
+        }
+        else
+        {
+            // Use default logic for AI players
+            int brushIndex = ComputeCurrentPlayeBrushIndex(_Human, _Index);
+            int colorIndex = ComputeCurrentPlayerColor(_Human, _Index);
+            player.Init(m_PlayerNameData.PickName(), m_Brushs[brushIndex], m_Colors[colorIndex]);
+        }
 
         if (_Human)
         {
@@ -514,6 +520,14 @@ public class GameManager : SingletonMB<GameManager>
         }
 
         return 0;
+    }
+    private GameObject m_SelectedSkinPrefab;
+    private Color m_SelectedSkinColor;
+
+    public void SetSelectedSkin(GameObject brushPrefab, Color brushColor)
+    {
+        m_SelectedSkinPrefab = brushPrefab;
+        m_SelectedSkinColor = brushColor;
     }
 
     public int SkinToColor(SkinData skin)

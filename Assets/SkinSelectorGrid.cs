@@ -52,57 +52,93 @@ public class SkinSelectorGrid : View<SkinSelectorGrid>
 
     private void PopulateGrid()
     {
+        // Initial validation
         if (brushPrefabs.Count == 0 || brushColorsData.Count == 0)
         {
-            Debug.LogError("Brush prefabs or ColorData not assigned properly!");
+            Debug.LogError("[SkinSelectorGrid] Brush prefabs or ColorData not assigned properly!");
             return;
         }
 
-        int totalItems = brushColorsData.Count * 2; // 6 colors × 2 brushes
+        // Debug available resources
+        Debug.Log($"[SkinSelectorGrid] Initializing grid with {brushPrefabs.Count} brush prefabs and {brushColorsData.Count} color sets");
+        for (int i = 0; i < brushPrefabs.Count; i++)
+        {
+            Debug.Log($"[SkinSelectorGrid] Available brush prefab {i}: {brushPrefabs[i].name}");
+        }
+
+        // Clear existing items if any
+        ClearGrid();
+
+        // Calculate total items (number of colors × number of brush types)
+        int totalItems = brushColorsData.Count * brushPrefabs.Count;
+        Debug.Log($"[SkinSelectorGrid] Creating {totalItems} total grid items");
 
         for (int i = 0; i < totalItems; i++)
         {
+            // Create skin item instance
             GameObject skinItemInstance = Instantiate(skinItemPrefab, gridParent);
             _instantiatedSkinItems.Add(skinItemInstance);
 
+            // Find model holder
             Transform modelHolder = skinItemInstance.transform.Find("ModelHolder");
             if (modelHolder == null)
             {
-                Debug.LogError("ModelHolder missing inside SkinItemPrefab!");
+                Debug.LogError($"[SkinSelectorGrid] ModelHolder missing in SkinItemPrefab at index {i}!");
                 continue;
             }
 
-            // --- UPDATED LOGIC ---
-            int group = (i / 3) % 2; // Switch brush every 3 fields
-            int brushIndex = group;
+            // Calculate brush and color indices
+            int brushIndex = (i / brushColorsData.Count) % brushPrefabs.Count;
             int colorIndex = i % brushColorsData.Count;
-            // ----------------------
 
+            Debug.Log($"[SkinSelectorGrid] Item {i}: Using brush {brushIndex} with color {colorIndex}");
+
+            // Instantiate brush
             GameObject brushInstance = Instantiate(brushPrefabs[brushIndex], modelHolder);
+            _instantiatedBrushes.Add(brushInstance);
+
+            // Set transform values
             brushInstance.transform.localPosition = Vector3.zero;
             brushInstance.transform.localRotation = Quaternion.identity;
             brushInstance.transform.localScale = Vector3.one * 30f;
 
-            _instantiatedBrushes.Add(brushInstance);
-
-            Brush brush = brushInstance.GetComponent<Brush>();
+            // Get and apply color
             Color baseColor = brushColorsData[colorIndex].m_Colors[0];
-
+            Brush brush = brushInstance.GetComponent<Brush>();
+        
             if (brush != null)
             {
                 foreach (Renderer renderer in brush.m_Renderers)
                 {
                     if (renderer != null)
+                    {
                         renderer.material.color = baseColor;
+                        Debug.Log($"[SkinSelectorGrid] Applied color R:{baseColor.r}, G:{baseColor.g}, B:{baseColor.b} to brush {brushIndex}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[SkinSelectorGrid] Null renderer found in brush at index {i}");
+                    }
                 }
             }
+            else
+            {
+                Debug.LogError($"[SkinSelectorGrid] Brush component missing on prefab at index {i}");
+            }
 
+            // Setup button
             SkinItemButton buttonScript = skinItemInstance.GetComponent<SkinItemButton>();
             if (buttonScript != null)
             {
                 buttonScript.Setup(this, brushPrefabs[brushIndex], baseColor);
             }
+            else
+            {
+                Debug.LogError($"[SkinSelectorGrid] SkinItemButton component missing on item at index {i}");
+            }
         }
+
+        Debug.Log("[SkinSelectorGrid] Grid population completed");
     }
 
     private void ClearGrid()
