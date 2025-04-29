@@ -101,8 +101,6 @@ public class DebugMenuController : MonoBehaviour
         if (featureController.featureData != null)
         {
             featureController.featureData.PlayerCollision = enabled;
-            
-            // Force game state update if in game
             if (GameManager.Instance.currentPhase == GamePhase.GAME)
             {
                 GameManager.Instance.ClearGame();
@@ -141,10 +139,8 @@ private void OnDailyRewardsToggled(bool enabled)
             
             if (enabled)
             {
-                // Then activate and initialize
-                dailyRewardManager.gameObject.SetActive(true);
-                // This will trigger the Start method again to properly initialize
-                //dailyRewardManager.Start();
+                //dailyRewardManager.gameObject.SetActive(true);
+                dailyRewardManager.InitializeArrays();
                 dailyRewardManager.CheckDailyReward();
             }
         }
